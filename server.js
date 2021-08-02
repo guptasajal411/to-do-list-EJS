@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { response } = require('express');
-var items = [];
+var items = ["Buy food", "Cook food", "Eat food"];
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
