@@ -17,42 +17,45 @@ const itemsSchema = {
 // create new mongoose model
 const Item = mongoose.model("Item", itemsSchema);
 
-// // adding items to collection
-// const firstTask = new Item({
-//     todo: "Welcome to the todo list!"
-// })
-// const secondTask = new Item({
-//     todo: "Hit + to create a new task"
-// })
-// const thirdTask = new Item({
-//     todo: "<-- Click this to delete a task" 
-// })
-// // array to contain default items
-// const defaultItems = [firstTask, secondTask, thirdTask];
-
-// //inserting default items to collection
-// Item.insertMany(defaultItems, function(err){
-//     if (err) {
-//         console.error(err);
-//     } else {
-//         console.log("Default items were successfully inserted.")
-//     }
-// }) 
 
 app.get("/", function (req, res) {
     Item.find({}, function (err, item) {
         if(err){
             console.log(err);
         } else {
-            res.render("list", { listTitle: "Today", newListItems: item });
+            if (item.length === 0){
+                // // adding items to collection only if database is empty
+                const firstTask = new Item({
+                    todo: "Welcome to the todo list!"
+                })
+                const secondTask = new Item({
+                    todo: "Hit + to create a new task"
+                })
+                const thirdTask = new Item({
+                    todo: "<-- Click this to delete a task" 
+                })
+                // array to contain default items
+                const defaultItems = [firstTask, secondTask, thirdTask];
+                //inserting default items to collection
+                Item.insertMany(defaultItems, function(err){
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log("Default items were successfully inserted.")
+                    }
+                }) 
+            } else {
+                res.render("list", { listTitle: "Today", newListItems: item });
+            }
         }
     })
 })
 
 app.post("/", function (req, res) {
-    console.log(req.body.newItem);
-    var item = req.body.newItem;
-    items.push(item);
+    const newTask = new Item({
+        todo: req.body.newItem
+    });
+    newTask.save();
     res.redirect("/");
 })
 
