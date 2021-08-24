@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { response } = require('express');
 const mongoose = require('mongoose');
+require("dotenv").config();
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect("mongodb+srv://" + process.env.usernameMongoDB + ":" + process.env.password +"@cluster0.xgjts.mongodb.net/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true})
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
