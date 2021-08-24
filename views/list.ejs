@@ -18,7 +18,7 @@
     <div class="box">
         <% newListItems.forEach(function(item){ %>
             <form method="POST" action="/delete" class="form-horizontal">
-                <input type="checkbox">
+                <input type="checkbox" onChange="this.form.submit()" name="checkbox" value="<%= item._id %>">
                 <p>
                     <%= item.todo %>
                 </p>
