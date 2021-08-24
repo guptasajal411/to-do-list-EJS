@@ -1,26 +1,46 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { response } = require('express');
-var items = ["Buy food", "Cook food", "Eat food"];
-var workItems = [];
+const mongoose = require('mongoose');
 
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true})
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
-
 app.set('view engine', 'ejs');
 
-app.get("/", function (req, res) {
-    var today = new Date();
-    var options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    };
-    var day = today.toLocaleDateString("en-US", options);
+// create items schema
+const itemsSchema = {
+    todo: String
+}
 
-    res.render("list", { listTitle: day, newListItems: items });
+// create new mongoose model
+const Item = mongoose.model("Item", itemsSchema);
+
+// adding items to collection
+const firstTask = new Item({
+    todo: "Welcome to the todo list!"
+})
+const secondTask = new Item({
+    todo: "Hit + to create a new task"
+})
+const thirdTask = new Item({
+    todo: "<-- Click this to delete a task" 
+})
+// array to contain default items
+const defaultItems = [firstTask, secondTask, thirdTask];
+
+//inserting default items to collection
+Item.insertMany(defaultItems, function(err){
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("Default items were successfully inserted.")
+    }
+}) 
+
+app.get("/", function (req, res) {
+    res.render("list", { listTitle: "Today", newListItems: items });
 })
 
 app.post("/", function (req, res) {
@@ -31,13 +51,6 @@ app.post("/", function (req, res) {
 })
 
 app.get("/work", function (req, res) {
-    var today = new Date();
-    var options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    };
-    var day = today.toLocaleDateString("en-US", options);
     res.render("list", { listTitle: "Work List", newListItems: workItems });
 })
 
