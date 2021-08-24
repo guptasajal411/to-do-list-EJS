@@ -17,30 +17,36 @@ const itemsSchema = {
 // create new mongoose model
 const Item = mongoose.model("Item", itemsSchema);
 
-// adding items to collection
-const firstTask = new Item({
-    todo: "Welcome to the todo list!"
-})
-const secondTask = new Item({
-    todo: "Hit + to create a new task"
-})
-const thirdTask = new Item({
-    todo: "<-- Click this to delete a task" 
-})
-// array to contain default items
-const defaultItems = [firstTask, secondTask, thirdTask];
+// // adding items to collection
+// const firstTask = new Item({
+//     todo: "Welcome to the todo list!"
+// })
+// const secondTask = new Item({
+//     todo: "Hit + to create a new task"
+// })
+// const thirdTask = new Item({
+//     todo: "<-- Click this to delete a task" 
+// })
+// // array to contain default items
+// const defaultItems = [firstTask, secondTask, thirdTask];
 
-//inserting default items to collection
-Item.insertMany(defaultItems, function(err){
-    if (err) {
-        console.error(err);
-    } else {
-        console.log("Default items were successfully inserted.")
-    }
-}) 
+// //inserting default items to collection
+// Item.insertMany(defaultItems, function(err){
+//     if (err) {
+//         console.error(err);
+//     } else {
+//         console.log("Default items were successfully inserted.")
+//     }
+// }) 
 
 app.get("/", function (req, res) {
-    res.render("list", { listTitle: "Today", newListItems: items });
+    Item.find({}, function (err, item) {
+        if(err){
+            console.log(err);
+        } else {
+            res.render("list", { listTitle: "Today", newListItems: item });
+        }
+    })
 })
 
 app.post("/", function (req, res) {
