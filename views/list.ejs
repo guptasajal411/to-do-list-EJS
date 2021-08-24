@@ -17,17 +17,17 @@
     </div>
     <div class="box">
         <% newListItems.forEach(function(item){ %>
-            <div class="item">
+            <form method="POST" action="/delete" class="form-horizontal">
                 <input type="checkbox">
                 <p>
                     <%= item.todo %>
                 </p>
-            </div>
-            <%})%>
-            <form action="/" method="post" class="item">
-                <input type="text" name="newItem" placeholder="New task...">
-                <button type="submit">+</button>
             </form>
+            <%})%>
+                <form action="/" method="post" class="item">
+                    <input type="text" name="newItem" placeholder="New task...">
+                    <button type="submit">+</button>
+                </form>
     </div>
 </body>
 
